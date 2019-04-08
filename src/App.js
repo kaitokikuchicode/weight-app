@@ -6,24 +6,27 @@ class App extends Component {
     super(props);
     this.state = {
       weight_input: "",
-      weight_list: []
+      weight_list: { weight: "", date: "" },
+      weight_lists: []
     };
   }
-  //It doesn't work
-  /*componentDidMount() {
-    const local_list = [];
-    local_list = localStorage.getItem("local_list");
-    if (local_list !== null) {
-      local_list.split(",");
+
+  componentDidMount() {
+    const local_lists = JSON.parse(localStorage.getItem("local_list"));
+
+    if (local_lists !== null) {
       this.setState({
-        weight_list: local_list.toString()
+        weight_lists: local_lists
       });
     }
 
     window.addEventListener("beforeunload", () => {
-      localStorage.setItem("local_list", this.state.weight_list);
+      localStorage.setItem(
+        "local_list",
+        JSON.stringify(this.state.weight_lists)
+      );
     });
-  }*/
+  }
 
   render() {
     return (
@@ -34,9 +37,9 @@ class App extends Component {
         <button onClick={this.click_button}>submit</button>
         <br />
         <div>
-          {this.state.weight_list.map((list, index) => (
+          {this.state.weight_lists.map((list, index) => (
             <li key={index}>
-              {list}
+              {list.weight}kg {list.date}
               <button onClick={() => this.delete(index)}>delete</button>
             </li>
           ))}
@@ -54,20 +57,25 @@ class App extends Component {
     const y = new Date().getFullYear();
     const m = new Date().getMonth() + 1;
     const d = new Date().getDate();
-    const date = y + "/" + m + "/" + d;
+    const h = new Date().getHours();
+    const min = new Date().getMinutes();
+    const date = y + "/" + m + "/" + d + " " + h + ":" + min;
 
     this.setState(state => ({
-      weight_list: [...state.weight_list, state.weight_input + " kg " + date],
+      weight_lists: [
+        ...state.weight_lists,
+        { weight: state.weight_input, date: date }
+      ],
       weight_input: ""
     }));
   };
 
   delete = index => {
     this.setState(state => {
-      const weight_list = [...state.weight_list];
-      weight_list.splice(index, 1);
+      const weight_lists = [...state.weight_lists];
+      weight_lists.splice(index, 1);
       return {
-        weight_list: weight_list
+        weight_lists: weight_lists
       };
     });
   };
