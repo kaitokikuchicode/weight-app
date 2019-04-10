@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
+import Button from "@material-ui/core/Button";
 
 class App extends Component {
   constructor(props) {
@@ -29,18 +30,39 @@ class App extends Component {
   }
 
   render() {
+    const b_style = {
+      margin: "5px",
+      padding: "5px",
+      fontSize: "8px"
+    };
     return (
       <div>
         <h2>Your Weight</h2>
         <input onChange={this.input_weight} value={this.state.weight_input} />
         <br />
-        <button onClick={this.click_button}>submit</button>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={this.click_button}
+          style={b_style}
+        >
+          submit
+        </Button>
+
         <br />
+
         <div>
           {this.state.weight_lists.map((list, index) => (
             <li key={index}>
               {list.weight}kg {list.date}
-              <button onClick={() => this.delete(index)}>delete</button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.delete(index)}
+                style={b_style}
+              >
+                delete
+              </Button>
             </li>
           ))}
         </div>
